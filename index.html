@@ -1666,6 +1666,66 @@
                 font-size: 0.8rem;
             }
         }
+
+        /* ===== ДОПОЛНИТЕЛЬНЫЙ СТИЛЬ ДЛЯ ПОДВАЛА (ЦЕНТРИРОВАНИЕ) ===== */
+        .footer {
+            padding: 2.5rem 0 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: center;
+        }
+
+        .footer .footer-container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer .links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer .badge-status {
+            color: var(--neon-green);
+            font-size: 0.75rem;
+            text-shadow: 0 0 16px rgba(107, 203, 119, 0.1);
+        }
+
+        .footer .counter {
+            margin: 0.5rem 0;
+        }
+
+        .footer .copy {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-top: 0.3rem;
+            opacity: 0.5;
+        }
+
+        .footer .to-top {
+            display: inline-block;
+            margin-top: 0.8rem;
+            padding: 0.3rem 1.5rem;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.7rem;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .footer .to-top:hover {
+            border-color: var(--neon-orange);
+            color: var(--neon-orange);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.04);
+        }
     </style>
 </head>
 <body>
@@ -1723,7 +1783,7 @@
         <div class="container">
             <div class="stats-row reveal">
                 <div class="stat-pill">
-                    <div class="num">12+</div>
+                    <div class="num">10+</div>
                     <div class="label">Проектов</div>
                 </div>
                 <div class="stat-pill">
@@ -1781,11 +1841,9 @@
                 <span class="tech-tag"><i class="fab fa-html5"></i> HTML5</span>
                 <span class="tech-tag"><i class="fab fa-css3-alt"></i> CSS3</span>
                 <span class="tech-tag"><i class="fab fa-js"></i> JavaScript</span>
-                <span class="tech-tag"><i class="fab fa-vuejs"></i> Vue.js</span>
                 <span class="tech-tag"><i class="fab fa-python"></i> Python</span>
                 <span class="tech-tag"><i class="fas fa-cube"></i> Blender 3D</span>
                 <span class="tech-tag"><i class="fab fa-git-alt"></i> Git</span>
-                <span class="tech-tag"><i class="fas fa-database"></i> SQL</span>
             </div>
         </div>
     </section>
@@ -1806,7 +1864,7 @@
                     </div>
                     <div class="meta">
                         <span class="price">от 3 000 ₽</span>
-                        <span class="preview-link"><i class="fas fa-eye"></i> Живым примером является данный сайт</span>
+                        <span class="preview-link"><i class="fas fa-eye"></i> Посмотреть в живую</span>
                     </div>
                 </div>
 
@@ -1819,7 +1877,7 @@
                     </div>
                     <div class="meta">
                         <span class="price">от 4 000 ₽</span>
-                        <span class="preview-link"><i class="fas fa-eye"></i> Живым примером является данный сайт</span>
+                        <span class="preview-link"><i class="fas fa-eye"></i> Посмотреть в живую</span>
                     </div>
                 </div>
 
@@ -1864,8 +1922,6 @@
 
                 <div class="calc-options">
                     <label><input type="checkbox" id="extraDomain" value="500"> Домен на год (+500 ₽)</label>
-                    <label><input type="checkbox" id="extraHosting" value="1000"> Хостинг на год (+1 000 ₽)</label>
-                    <label><input type="checkbox" id="extraSeo" value="800"> Базовое SEO (+800 ₽)</label>
                 </div>
 
                 <div class="calc-total" onclick="openPaymentModal()">
@@ -2125,10 +2181,8 @@
 
     <!-- ===== ПОДВАЛ ===== -->
     <footer class="footer">
-        <div class="container">
+        <div class="container footer-container">
             <div class="links">
-                <a href="privacy.html">Политика конфиденциальности</a>
-                <a href="terms.html">Пользовательское соглашение</a>
                 <span class="badge-status"><i class="fas fa-shield-alt"></i> Самозанятые (НПД)</span>
             </div>
             <div class="counter">
@@ -2245,8 +2299,6 @@
             const urgency = parseFloat(document.getElementById('calcUrgency').value);
             let extra = 0;
             if (document.getElementById('extraDomain').checked) extra += 500;
-            if (document.getElementById('extraHosting').checked) extra += 1000;
-            if (document.getElementById('extraSeo').checked) extra += 800;
             const total = Math.round(base * urgency + extra);
             document.getElementById('calcResult').textContent = total.toLocaleString();
             document.getElementById('payAmount').textContent = total.toLocaleString();
@@ -2255,8 +2307,6 @@
         document.getElementById('calcType').addEventListener('change', updateCalc);
         document.getElementById('calcUrgency').addEventListener('change', updateCalc);
         document.getElementById('extraDomain').addEventListener('change', updateCalc);
-        document.getElementById('extraHosting').addEventListener('change', updateCalc);
-        document.getElementById('extraSeo').addEventListener('change', updateCalc);
         updateCalc();
 
         // ===== МОДАЛКА ОПЛАТЫ =====
