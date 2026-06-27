@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Глеб | 3D · Код · Инвестиции</title>
+    <link rel="icon" type="image/png" href="../favicon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ===== БАЗА ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #050a08;
+            --card-bg: rgba(10, 25, 16, 0.7);
+            --text: #e8f0ed;
+            --text-muted: #8aa89a;
+            --neon-green: #00ff66;
+            --neon-green-dark: #00bb44;
+            --neon-green-glow: 0 0 12px #00ff66, 0 0 40px #00ff6680, 0 0 80px #00ff6640;
+            --radius: 2rem;
+            --radius-sm: 1.2rem;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 20% 20%, #0f281a, var(--bg));
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--neon-green);
+            color: #000;
+        }
+
+        /* ===== ПРЕЛОАДЕР (НОВЫЙ, ЭФФЕКТНЫЙ) ===== */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+
+        .preloader.hide {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        .preloader .ring {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: var(--neon-green);
+            border-bottom-color: var(--neon-green);
+            animation: spinRing 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            box-shadow: 0 0 40px rgba(0, 255, 102, 0.15);
+        }
+
+        .preloader .ring::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-left-color: var(--neon-green-dark);
+            border-right-color: var(--neon-green-dark);
+            animation: spinRing 1.8s cubic-bezier(0.5, 0, 0.5, 1) infinite reverse;
+            opacity: 0.6;
+        }
+
+        @keyframes spinRing {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .preloader .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: #fff;
+            margin-top: 2rem;
+            letter-spacing: 8px;
+            text-shadow: 0 0 30px rgba(0, 255, 102, 0.3);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        .preloader .logo-text span {
+            color: var(--neon-green);
+            text-shadow: var(--neon-green-glow);
+        }
+
+        @keyframes pulseGlow {
+            0%,
+            100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.02);
+            }
+        }
+
+        .preloader .bar-wrap {
+            margin-top: 30px;
+            width: 260px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.08);
+        }
+
+        .preloader .bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-green-dark), var(--neon-green), #88ffbb);
+            border-radius: 6px;
+            box-shadow: 0 0 20px var(--neon-green);
+            animation: fillBar 4.5s ease-in-out forwards;
+        }
+
+        @keyframes fillBar {
+            0% {
+                width: 0%;
+            }
+            60% {
+                width: 70%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .preloader .load-text {
+            margin-top: 16px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            color: var(--text-muted);
+            animation: pulseText 1.8s ease-in-out infinite;
+        }
+
+        @keyframes pulseText {
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* ===== ЛЕТАЮЩИЕ ЧАСТИЦЫ В ПРЕЛОАДЕРЕ ===== */
+        .preloader .particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .preloader .particle {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            font-size: 18px;
+            opacity: 0;
+            animation: floatParticle var(--dur) ease-in-out infinite alternate;
+        }
+
+        .preloader .particle.green {
+            color: var(--neon-green);
+            text-shadow: 0 0 20px var(--neon-green);
+        }
+        .preloader .particle.cyan {
+            color: #00e5ff;
+            text-shadow: 0 0 20px #00e5ff;
+        }
+        .preloader .particle.purple {
+            color: #b44dff;
+            text-shadow: 0 0 20px #b44dff;
+        }
+        .preloader .particle.white {
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(0.3);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.6;
+            }
+            80% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) rotate(200deg) scale(1.4);
+                opacity: 0;
+            }
+        }
+
+        /* ===== НАВИГАЦИЯ НАЗАД ===== */
+        .back-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 10, 8, 0.92);
+            backdrop-filter: blur(20px);
+            padding: 0.7rem 2rem;
+            border-bottom: 1px solid rgba(0, 255, 102, 0.06);
+            display: flex;
+            align-items: center;
+        }
+
+        .back-nav a {
+            color: var(--neon-green);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: 0.3s;
+        }
+
+        .back-nav a:hover {
+            text-shadow: var(--neon-green-glow);
+            transform: translateX(-4px);
+        }
+
+        /* ===== ГЕРОЙ ===== */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-avatar {
+            flex: 0 0 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-avatar img {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(0, 255, 102, 0.1);
+            box-shadow: 0 0 60px rgba(0, 255, 102, 0.08);
+            transition: 0.4s;
+        }
+
+        .hero-avatar img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 90px rgba(0, 255, 102, 0.15);
+            border-color: rgba(0, 255, 102, 0.2);
+        }
+
+        .hero-info {
+            flex: 1;
+        }
+
+        .hero-info h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(0, 255, 102, 0.15);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-info .tagline {
+            font-size: clamp(1rem, 1.4vw, 1.3rem);
+            color: #b4d4bb;
+            line-height: 1.7;
+            max-width: 500px;
+            font-style: italic;
+            margin-bottom: 1.8rem;
+            padding-left: 1.2rem;
+            border-left: 3px solid var(--neon-green);
+        }
+
+        .hero-info .tagline span {
+            color: var(--neon-green);
+            text-shadow: var(--neon-green-glow);
+        }
+
+        .hero-contacts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .hero-contacts a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            background: rgba(0, 255, 102, 0.04);
+            border: 1px solid rgba(0, 255, 102, 0.08);
+            color: #b4d4bb;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .hero-contacts a:hover {
+            background: rgba(0, 255, 102, 0.1);
+            border-color: var(--neon-green);
+            color: #fff;
+            box-shadow: 0 0 30px rgba(0, 255, 102, 0.04);
+        }
+
+        .hero-contacts a i {
+            color: var(--neon-green);
+            font-size: 1rem;
+        }
+
+        /* ===== ЛЕТАЮЩИЕ СИМВОЛЫ (фон) ===== */
+        .floating-symbols {
+            position: absolute;
+            right: -50px;
+            top: 0;
+            bottom: 0;
+            width: 300px;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-symbols .sym {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            opacity: 0;
+            font-size: 18px;
+            animation: floatSym var(--dur) ease-in-out infinite alternate;
+        }
+
+        .floating-symbols .sym.green {
+            color: var(--neon-green);
+            text-shadow: 0 0 15px var(--neon-green);
+        }
+        .floating-symbols .sym.cyan {
+            color: #00e5ff;
+            text-shadow: 0 0 15px #00e5ff;
+        }
+        .floating-symbols .sym.purple {
+            color: #b44dff;
+            text-shadow: 0 0 15px #b44dff;
+        }
+        .floating-symbols .sym.white {
+            color: rgba(255, 255, 255, 0.12);
+        }
+
+        @keyframes floatSym {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(0.4);
+                opacity: 0;
+            }
+            25% {
+                opacity: 0.2;
+            }
+            75% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) rotate(200deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* ===== КОНТЕЙНЕР И СЕКЦИИ ===== */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            padding: 3.5rem 0;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            color: #dfe9ff;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .section-title i {
+            color: var(--neon-green);
+            filter: drop-shadow(0 0 10px rgba(0, 255, 102, 0.6));
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(to bottom, var(--neon-green), var(--neon-green-dark));
+            border-radius: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(18px);
+            border-radius: var(--radius-sm);
+            padding: 1.5rem 1.3rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.6);
+            transition: 0.35s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            border: 1px solid rgba(0, 255, 102, 0.04);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(10, 40, 20, 0.6);
+            box-shadow: 0 28px 50px -10px rgba(0, 255, 102, 0.12);
+            border-color: rgba(0, 255, 102, 0.12);
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            background: rgba(0, 255, 102, 0.08);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: var(--neon-green);
+            border: 1px solid rgba(0, 255, 102, 0.08);
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f0f6ff;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .hobby-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+
+        .hobby-tag {
+            background: rgba(0, 255, 102, 0.05);
+            border: 1px solid rgba(0, 255, 102, 0.08);
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-muted);
+            transition: 0.25s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .hobby-tag:hover {
+            background: rgba(0, 255, 102, 0.12);
+            border-color: var(--neon-green);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.04);
+        }
+
+        .hobby-tag i {
+            color: var(--neon-green);
+        }
+
+        .quote-block {
+            background: rgba(0, 255, 102, 0.03);
+            border-radius: var(--radius-sm);
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 255, 102, 0.05);
+            text-align: center;
+        }
+
+        .quote-block .quote {
+            font-style: italic;
+            font-size: 1rem;
+            color: #88bb99;
+            margin: 0.5rem 0;
+        }
+
+        .quote-block i {
+            color: var(--neon-green);
+            font-size: 1.5rem;
+        }
+
+        .grid-3d {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== ФУТЕР ===== */
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #2a4a2a;
+            border-top: 1px solid rgba(0, 255, 102, 0.04);
+            font-size: 0.8rem;
+        }
+
+        /* ===== МОДАЛКИ ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 9999;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-content {
+            background: rgba(20, 30, 25, 0.95);
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            border: 1px solid rgba(0, 255, 102, 0.05);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #dfe9ff;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content h2 i {
+            color: var(--neon-green);
+        }
+
+        #photoViewer {
+            z-index: 10000;
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            align-items: center;
+            justify-content: center;
+        }
+
+        #photoViewer img {
+            max-width: 95%;
+            max-height: 85%;
+            object-fit: contain;
+            border-radius: 0.8rem;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 900px) {
+            .hero-wrapper {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+            }
+            .hero-avatar {
+                flex: 0 0 auto;
+            }
+            .hero-avatar img {
+                width: 180px;
+                height: 180px;
+            }
+            .hero-info .tagline {
+                border-left: none;
+                padding-left: 0;
+                margin: 0 auto 1.5rem;
+                max-width: 100%;
+            }
+            .hero-contacts {
+                justify-content: center;
+            }
+            .floating-symbols {
+                display: none;
+            }
+            .back-nav {
+                padding: 0.6rem 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+            .grid-3d {
+                grid-template-columns: 1fr;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+            section {
+                padding: 2rem 0;
+            }
+            .hero {
+                min-height: 70vh;
+            }
+            .hero-avatar img {
+                width: 140px;
+                height: 140px;
+            }
+            .hero-info h1 {
+                font-size: 2rem;
+            }
+            .hero-info .tagline {
+                font-size: 0.95rem;
+            }
+            .container {
+                padding: 0 1rem;
+            }
+            .modal-content {
+                padding: 1.2rem;
+            }
+            .preloader .logo-text {
+                font-size: 1.8rem;
+            }
+            .preloader .ring {
+                width: 100px;
+                height: 100px;
+            }
+            .preloader .bar-wrap {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-avatar img {
+                width: 110px;
+                height: 110px;
+            }
+            .hero-info h1 {
+                font-size: 1.6rem;
+            }
+            .hero-contacts a {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
+            }
+            .section-title {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ПРЕЛОАДЕР (НОВЫЙ) ===== -->
+    <div class="preloader" id="preloader">
+        <div class="particles">
+            <div class="particle green" style="top:10%;left:5%;--dur:12s;--tx:120px;--ty:-160px;font-size:22px;">&lt;/&gt;</div>
+            <div class="particle purple" style="bottom:15%;right:8%;--dur:15s;--tx:-130px;--ty:110px;font-size:28px;">{ }</div>
+            <div class="particle cyan" style="top:30%;right:8%;--dur:10s;--tx:-180px;--ty:-80px;font-size:16px;">⚡</div>
+            <div class="particle white" style="bottom:20%;left:8%;--dur:18s;--tx:140px;--ty:-70px;font-size:24px;">⬡</div>
+            <div class="particle green" style="bottom:10%;left:40%;--dur:12s;--tx:160px;--ty:-120px;font-size:20px;">[mesh]</div>
+            <div class="particle purple" style="top:50%;left:12%;--dur:16s;--tx:170px;--ty:100px;font-size:18px;">(vertex)</div>
+            <div class="particle cyan" style="top:8%;right:22%;--dur:20s;--tx:-50px;--ty:140px;font-size:14px;">#render</div>
+            <div class="particle white" style="top:60%;right:10%;--dur:22s;--tx:-70px;--ty:-100px;font-size:12px;">◇</div>
+            <div class="particle green" style="bottom:40%;left:4%;--dur:11s;--tx:80px;--ty:-50px;font-size:14px;">🎨</div>
+            <div class="particle purple" style="top:20%;left:45%;--dur:13s;--tx:-90px;--ty:-130px;font-size:18px;">_smooth</div>
+            <div class="particle cyan" style="top:40%;right:25%;--dur:17s;--tx:-120px;--ty:80px;font-size:14px;">🚗</div>
+            <div class="particle white" style="bottom:50%;left:15%;--dur:19s;--tx:100px;--ty:-60px;font-size:12px;">📈</div>
+            <div class="particle green" style="top:70%;left:30%;--dur:14s;--tx:90px;--ty:-90px;font-size:13px;">_modifier</div>
+            <div class="particle purple" style="bottom:25%;right:35%;--dur:16s;--tx:-90px;--ty:-70px;font-size:12px;">_subdivision</div>
+            <div class="particle cyan" style="top:25%;left:15%;--dur:21s;--tx:140px;--ty:-110px;font-size:18px;">{polygon}</div>
+            <div class="particle white" style="bottom:12%;right:10%;--dur:13s;--tx:-70px;--ty:60px;font-size:12px;">🔥</div>
+            <div class="particle green" style="top:55%;left:50%;--dur:18s;--tx:-60px;--ty:-140px;font-size:13px;">=></div>
+            <div class="particle purple" style="top:8%;left:60%;--dur:15s;--tx:70px;--ty:-180px;font-size:14px;">_texture</div>
+            <div class="particle cyan" style="bottom:30%;right:18%;--dur:20s;--tx:-110px;--ty:70px;font-size:12px;">💻</div>
+            <div class="particle white" style="top:5%;left:30%;--dur:17s;--tx:110px;--ty:-110px;font-size:14px;">🟢</div>
+        </div>
+
+        <div class="ring"></div>
+        <div class="logo-text">ГЛЕБ <span>✦</span></div>
+        <div class="bar-wrap"><div class="bar" id="loadingBar"></div></div>
+        <div class="load-text">ЗАГРУЗКА ВСЕЛЕННОЙ...</div>
+    </div>
+
+    <!-- ===== НАВИГАЦИЯ НАЗАД ===== -->
+    <nav class="back-nav">
+        <a href="../index.html"><i class="fas fa-arrow-left"></i> Назад на ANADE.PRO</a>
+    </nav>
+
+    <!-- ===== ГЕРОЙ ===== -->
+    <section class="hero">
+        <div class="hero-wrapper">
+            <div class="hero-avatar">
+                <img src="../avatar.jpg" alt="Глеб" />
+            </div>
+            <div class="hero-info">
+                <h1>Глеб</h1>
+                <div class="tagline">
+                    «Собираю вселенную из полигонов, кода и адреналина.<br />
+                    <span>Нижний Тагил — точка старта.»</span>
+                </div>
+                <div class="hero-contacts">
+                    <a href="https://t.me/anade17" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
+                    <a href="https://max.ru/u/f9LHodD0cOKOrZbZ-67yito13pLvKpiGoAcWADi_cdYJSshy0HSuWjNyjss" target="_blank"><i class="fas fa-rocket"></i> MAX</a>
+                    <a href="https://vk.com/id639317163" target="_blank"><i class="fab fa-vk"></i> VK</a>
+                    <a href="mailto:sgleb0451@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+                </div>
+            </div>
+
+            <!-- Летающие символы -->
+            <div class="floating-symbols">
+                <div class="sym green" style="top:5%;left:10%;--dur:14s;--tx:70px;--ty:-140px;font-size:16px;">&lt;/&gt;</div>
+                <div class="sym purple" style="top:20%;right:5%;--dur:12s;--tx:-90px;--ty:120px;font-size:20px;">{ }</div>
+                <div class="sym cyan" style="bottom:30%;left:20%;--dur:16s;--tx:110px;--ty:-90px;font-size:14px;">⬡</div>
+                <div class="sym white" style="top:40%;right:10%;--dur:18s;--tx:-130px;--ty:70px;font-size:12px;">[mesh]</div>
+                <div class="sym green" style="bottom:10%;right:5%;--dur:20s;--tx:-70px;--ty:-160px;font-size:14px;">(vertex)</div>
+                <div class="sym purple" style="top:60%;left:5%;--dur:13s;--tx:90px;--ty:-110px;font-size:12px;">🎨</div>
+                <div class="sym cyan" style="bottom:50%;right:15%;--dur:15s;--tx:-110px;--ty:90px;font-size:11px;">#render</div>
+                <div class="sym white" style="top:10%;right:25%;--dur:17s;--tx:-50px;--ty:170px;font-size:11px;">🚗</div>
+                <div class="sym green" style="bottom:5%;left:30%;--dur:19s;--tx:130px;--ty:-70px;font-size:11px;">📈</div>
+                <div class="sym purple" style="top:75%;right:8%;--dur:14s;--tx:-90px;--ty:-120px;font-size:12px;">_smooth</div>
+                <div class="sym cyan" style="top:45%;left:15%;--dur:16s;--tx:70px;--ty:-100px;font-size:11px;">_subdivision</div>
+                <div class="sym white" style="bottom:20%;right:30%;--dur:18s;--tx:-70px;--ty:-140px;font-size:11px;">{polygon}</div>
+                <div class="sym green" style="top:30%;left:5%;--dur:21s;--tx:160px;--ty:-80px;font-size:11px;">_modifier</div>
+                <div class="sym purple" style="bottom:60%;right:5%;--dur:12s;--tx:-50px;--ty:100px;font-size:11px;">🔥</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+    <div class="container">
+
+        <!-- Хобби -->
+        <section>
+            <div class="section-title"><i class="fas fa-gamepad"></i> Хобби &amp; увлечения</div>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-desktop"></i></div>
+                    <h3>ПК игры</h3>
+                    <p>Киберспорт, стратегии. Игровой сетап для побед.</p>
+                    <div class="hobby-list">
+                        <span class="hobby-tag" onclick="alert('🎮 Мои шутеры: Valorant, Apex Legends, CS2')"><i class="fas fa-crosshairs"></i> Шутеры</span>
+                        <span class="hobby-tag" onclick="alert('🖥️ Игровой сетап: RTX 3060, Ryzen 5, 32GB RAM')"><i class="fas fa-microchip"></i> Сетап</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-camera-retro"></i></div>
+                    <h3>Фотографии</h3>
+                    <p>Красивые снимки на фотик: природа, urban, портреты.</p>
+                    <div class="hobby-list">
+                        <span class="hobby-tag" onclick="openGallery()"><i class="fas fa-image"></i> Кадры</span>
+                        <span class="hobby-tag" onclick="alert('🖼️ Продажа фотографий — скоро!')"><i class="fas fa-tag"></i> Продажи</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-cube"></i></div>
+                    <h3>3D моделирование</h3>
+                    <p>Создаю детали, объекты, экспериментирую с формами.</p>
+                    <div class="hobby-list">
+                        <span class="hobby-tag"><i class="fas fa-paint-brush"></i> Дизайн</span>
+                        <span class="hobby-tag"><i class="fas fa-shopping-cart"></i> Продажа</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Фондовый рынок</h3>
+                    <p>Изучаю акции, облигации, ETF. Анализирую рынок.</p>
+                    <div class="hobby-list">
+                        <a href="https://www.tbank.ru/invest/social/profile/ANADE?author=profile" target="_blank" class="hobby-tag"><i class="fas fa-broadcast-tower"></i> Пульс</a>
+                        <span class="hobby-tag" onclick="openMoex()"><i class="fas fa-globe"></i> MOEX</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Цитата -->
+        <section style="padding-top: 0;">
+            <div class="quote-block">
+                <i class="fas fa-quote-right"></i>
+                <p class="quote">«Код — это искусство, а 3D — это магия. Соединяю их в каждом проекте.»</p>
+                <p style="color: #3a5a3a; font-size: 0.8rem; margin-top: 0.3rem;">— Глеб, 17 лет</p>
+            </div>
+        </section>
+
+        <!-- 3D моделирование -->
+        <section>
+            <div class="section-title"><i class="fas fa-project-diagram"></i> 3D моделирование &amp; визуал</div>
+            <div class="grid-3d">
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-gem"></i></div>
+                    <h3>Blender</h3>
+                    <p>Моделирую детали, окружение, персонажей.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-cubes"></i></div>
+                    <h3>Визуализация &amp; печать</h3>
+                    <p>Объекты для визуализаций и 3D-печати.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Инвестиции -->
+        <section>
+            <div class="section-title"><i class="fas fa-coins"></i> Инвестиции &amp; рынок</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 1.2rem;">
+                <div class="card" style="flex:1; min-width: 200px;">
+                    <div class="card-icon"><i class="fas fa-book-open"></i></div>
+                    <h3>Изучаю</h3>
+                    <p>Анализ рынка. МосБиржа, SP500, финансовая грамотность.</p>
+                </div>
+                <div class="card" style="flex:1; min-width: 200px;">
+                    <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+                    <h3>Практика</h3>
+                    <p>Портфель, дневник сделок, анализ компаний.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- JDM -->
+        <section>
+            <div class="section-title"><i class="fas fa-car-side"></i> Культура JDM</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 1.2rem;">
+                <div style="flex: 1; min-width: 240px;">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-flag"></i></div>
+                        <h3>Культура JDM</h3>
+                        <p>Японский автопром и его наследие.</p>
+                        <div class="hobby-list">
+                            <span class="hobby-tag" onclick="openJdmModal(1)"><i class="fas fa-info-circle"></i> О культуре</span>
+                            <span class="hobby-tag" onclick="openJdmModal(2)"><i class="fas fa-history"></i> История</span>
+                            <span class="hobby-tag" onclick="openJdmModal(3)"><i class="fas fa-cogs"></i> Черты</span>
+                            <span class="hobby-tag" onclick="openJdmModal(4)"><i class="fas fa-star"></i> Авто</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="flex: 1; min-width: 200px;">
+                    <div class="quote-block">
+                        <i class="fas fa-quote-right"></i>
+                        <p class="quote">«JDM — это не просто автомобили, а целая философия японского автопрома.»</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Футер -->
+        <div class="footer">
+            <p>© 2026 Глеб — Веб-дизайнер, 3D-модельер, инвестор и любитель активного отдыха.</p>
+            <p style="margin-top: 0.3rem; color: #2a4a2a;">Сделано с ❤️ в Нижнем Тагиле</p>
+        </div>
+    </div>
+
+    <!-- ===== МОДАЛКИ ===== -->
+    <div id="photoViewer" onclick="closePhotoViewer()">
+        <button class="modal-close" onclick="event.stopPropagation(); closePhotoViewer();">&times;</button>
+        <img id="photoViewerImg" src="" alt="Фото" onclick="event.stopPropagation()" />
+    </div>
+
+    <div id="galleryModal" class="modal-overlay">
+        <button class="modal-close" onclick="closeGallery()">&times;</button>
+        <div class="modal-content">
+            <h2><i class="fas fa-images"></i> Мои фотографии</h2>
+            <div id="galleryGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;"></div>
+        </div>
+    </div>
+
+    <div id="moexModal" class="modal-overlay">
+        <button class="modal-close" onclick="closeMoex()">&times;</button>
+        <div class="modal-content">
+            <h2><i class="fas fa-chart-bar"></i> Мой портфель MOEX</h2>
+            <div id="moexGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.8rem; padding-bottom: 1rem;"></div>
+            <div style="text-align: center;"><a href="https://www.tbank.ru/invest/stocks/?exchange=MOEX" target="_blank" class="hobby-tag" style="text-decoration: none;">Смотреть все акции MOEX</a></div>
+        </div>
+    </div>
+
+    <div id="jdmModal" class="modal-overlay">
+        <button class="modal-close" onclick="closeJdm()">&times;</button>
+        <div class="modal-content" id="jdmContent"></div>
+    </div>
+
+    <script>
+        // ===== ПРЕЛОАДЕР =====
+        setTimeout(() => {
+            const bar = document.getElementById('loadingBar');
+            bar.style.width = '100%';
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hide');
+                setTimeout(() => {
+                    document.getElementById('preloader').style.display = 'none';
+                }, 1300);
+            }, 400);
+        }, 4500);
+
+        // ===== ФОТОГАЛЕРЕЯ =====
+        const photos = ["1000005750.jpg","1000004179.jpg","1000005761.jpg","1000004174.jpg","1000004097.jpg","1000004163.jpg","1000004161.jpg","1000005749.jpg","1000005764.jpg","1000004165.jpg","1000004162.jpg","1000004167.jpg","1000005760.jpg","1000004100.jpg","1000004164.jpg","1000004169.jpg","1000004171.jpg","1000004166.jpg","1000005763.jpg","1000004168.jpg"];
+
+        function openGallery() {
+            document.getElementById('galleryGrid').innerHTML = photos.map(p => `
+                <div style="background:rgba(0,255,102,0.03);border-radius:1rem;overflow:hidden;cursor:pointer;border:1px solid rgba(0,255,102,0.05);transition:0.3s;" onclick="openPhotoViewer('${p}')">
+                    <div style="height:160px;background:#0d1117;"><img src="${p}" style="width:100%;height:100%;object-fit:cover;"></div>
+                    <div style="padding:0.5rem;color:#7b8ca8;font-size:0.7rem;text-align:center;">${p}</div>
+                </div>
+            `).join('');
+            document.getElementById('galleryModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeGallery() {
+            document.getElementById('galleryModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openPhotoViewer(src) {
+            document.getElementById('photoViewerImg').src = src;
+            document.getElementById('photoViewer').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePhotoViewer() {
+            document.getElementById('photoViewer').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // ===== MOEX =====
+        const stocks = [
+            {n:"Сбербанк",t:"SBER",p:"323,8 ₽",pr:"+6,92%",pos:true},
+            {n:"Газпром",t:"GAZP",p:"120,47 ₽",pr:"−0,71%",pos:false},
+            {n:"ВТБ",t:"VTBR",p:"92,97 ₽",pr:"+32,45%",pos:true},
+            {n:"Роснефть",t:"ROSN",p:"413,65 ₽",pr:"+6%",pos:true},
+            {n:"Самолёт",t:"SMLT",p:"580,6 ₽",pr:"−33,17%",pos:false},
+            {n:"Полюс",t:"PLZL",p:"2169,6 ₽",pr:"+0,58%",pos:true},
+            {n:"Новатэк",t:"NVTK",p:"1163,9 ₽",pr:"+6,76%",pos:true},
+            {n:"OZON",t:"OZON",p:"4221 ₽",pr:"+5,03%",pos:true},
+            {n:"Т-Технологии",t:"T",p:"310,78 ₽",pr:"+4%",pos:true},
+            {n:"ЭсЭфАй",t:"SFIN",p:"1020,6 ₽",pr:"−26,37%",pos:false},
+            {n:"Астра",t:"ASTR",p:"277,25 ₽",pr:"−8,32%",pos:false}
+        ];
+
+        function openMoex() {
+            document.getElementById('moexGrid').innerHTML = stocks.map(s => `
+                <div style="background:rgba(18,23,35,0.9);border-radius:1rem;padding:0.8rem;text-align:center;border:1px solid rgba(0,255,102,0.05);">
+                    <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,${s.pos?'rgba(0,255,102,0.2)':'rgba(255,50,50,0.2)'},#1a1e2b);margin:0 auto;display:flex;align-items:center;justify-content:center;font-weight:700;color:${s.pos?'var(--neon-green)':'#ff4444'};font-size:0.8rem;">${s.t[0]}</div>
+                    <div style="color:#f0f6ff;font-weight:600;margin-top:0.3rem;font-size:0.85rem;">${s.n}</div>
+                    <div style="color:#7b8ca8;font-size:0.65rem;">${s.t}</div>
+                    <div style="color:#cfdefa;font-size:0.85rem;">${s.p}</div>
+                    <div style="color:${s.pos?'var(--neon-green)':'#ff4444'};font-weight:600;font-size:0.85rem;">${s.pr}</div>
+                </div>
+            `).join('');
+            document.getElementById('moexModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMoex() {
+            document.getElementById('moexModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // ===== JDM =====
+        const jdmData = [
+            {title:"Немного о культуре JDM",text:"JDM — это не просто автомобили, а целая философия японского автопрома.",photos:["о культуре.jpg","о культуре (1).jpg"],descriptions:["Атмосфера JDM","Японский стиль"]},
+            {title:"История зарождения",text:"Культура JDM зародилась в Японии в 1980-х годах.",photos:["зарождение.jpg","зарождение (1).jpg"],descriptions:["Первые шаги","Эволюция стиля"]},
+            {title:"Отличительные черты",items:[
+                {photo:"оч правый руль.jpg",title:"Правый руль",desc:"Особенность JDM-автомобилей для японских дорог."},
+                {photo:"оч стайлинг.jpg",title:"Агрессивный стайлинг",desc:"Низкий профиль, широкие арки, спойлеры."},
+                {photo:"оч турбосторы.jpg",title:"Турбомоторы",desc:"Высокооборотистые двигатели с наддувом."}
+            ]},
+            {title:"Популярные автомобили JDM",items:[
+                {photo:"Skyline R33 R34.jpg",title:"Nissan Skyline GT-R",desc:"Легендарный «Годзилла» с турбомотором RB26DETT."},
+                {photo:"Integra Type R.jpg",title:"Honda Integra Type R",desc:"Переднеприводный спорткар с мотором B18C."},
+                {photo:"Chaser JZX100.jpg",title:"Toyota Chaser JZX100",desc:"Культовый дрифтовый седан с 1JZ-GTE."},
+                {photo:"RX-7.jpg",title:"Mazda RX-7",desc:"Роторный спорткар с двигателем Ванкеля."},
+                {photo:"Impreza 22B.jpg",title:"Subaru Impreza 22B STi",desc:"Ралли-монстр с турбооппозитником."}
+            ]}
+        ];
+
+        function openJdmModal(i) {
+            const d = jdmData[i-1];
+            let h = `<h2><i class="fas fa-car-side"></i> ${d.title}</h2>`;
+            if(d.text) h += `<p style="color:#b4c4dd;text-align:center;max-width:600px;margin:0 auto 1.2rem;">${d.text}</p>`;
+            if(d.photos) {
+                h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;padding-bottom:1rem;">';
+                d.photos.forEach((p,j) => {
+                    h += `<div style="background:rgba(255,255,255,0.03);border-radius:1rem;overflow:hidden;border:1px solid rgba(0,255,102,0.05);cursor:pointer;" onclick="openPhotoViewer('${p}')">
+                        <div style="height:160px;"><img src="${p}" style="width:100%;height:100%;object-fit:cover;"></div>`;
+                    if(d.descriptions[j]) h += `<div style="padding:0.5rem;color:#b4c4dd;text-align:center;font-size:0.8rem;">${d.descriptions[j]}</div>`;
+                    h += '</div>';
+                });
+                h += '</div>';
+            }
+            if(d.items) {
+                d.items.forEach(item => {
+                    h += `<div style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;background:rgba(0,255,102,0.03);border-radius:1rem;padding:1rem;border:1px solid rgba(0,255,102,0.05);">
+                        <div style="flex:0 0 160px;height:120px;border-radius:0.6rem;overflow:hidden;cursor:pointer;" onclick="openPhotoViewer('${item.photo}')"><img src="${item.photo}" style="width:100%;height:100%;object-fit:cover;"></div>
+                        <div style="flex:1;"><h3 style="color:#f0f6ff;font-size:1.1rem;">${item.title}</h3><p style="color:#b4c4dd;font-size:0.85rem;">${item.desc}</p></div>
+                    </div>`;
+                });
+            }
+            document.getElementById('jdmContent').innerHTML = h;
+            document.getElementById('jdmModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeJdm() {
+            document.getElementById('jdmModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // ===== ЗАКРЫТИЕ МОДАЛОК ПО КЛИКУ НА ФОН =====
+        document.querySelectorAll('.modal-overlay').forEach(el => {
+            el.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        console.log('🚀 Сайт Глеба — зелёный неон с новым прелоадером!');
+    </script>
+</body>
+</html>
