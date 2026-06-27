@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOVA — студия дизайна и стратегии</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0b110e;
+            color: #d8e0d8;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Шапка */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.8rem 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.06);
+            position: sticky;
+            top: 0;
+            background: rgba(11,17,14,0.85);
+            backdrop-filter: blur(16px);
+            z-index: 10;
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f0e8d8;
+        }
+        .logo span { color: #d4af37; }
+        .nav a {
+            color: #8a9a8a;
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+            position: relative;
+        }
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #d4af37;
+            transition: 0.3s;
+        }
+        .nav a:hover { color: #d4af37; }
+        .nav a:hover::after { width: 100%; }
+
+        /* Герой */
+        .hero {
+            padding: 4rem 0 3rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.04);
+        }
+        .hero .badge {
+            display: inline-block;
+            padding: 0.3rem 1.6rem;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: rgba(212, 175, 55, 0.04);
+            border: 1px solid rgba(212, 175, 55, 0.08);
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: #f0e8d8;
+            margin-bottom: 0.5rem;
+        }
+        .hero h1 .accent { color: #d4af37; }
+        .hero .sub {
+            font-size: 1.2rem;
+            color: #8a9a8a;
+            max-width: 500px;
+            margin: 0 auto 1.8rem;
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            padding: 0.8rem 3rem;
+            border-radius: 60px;
+            background: #d4af37;
+            color: #0b110e;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-primary:hover { background: #c4a030; transform: translateY(-3px); }
+        .btn-secondary {
+            padding: 0.8rem 3rem;
+            border-radius: 60px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            color: #8a9a8a;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .btn-secondary:hover { border-color: #d4af37; color: #d4af37; }
+
+        /* Секции */
+        section {
+            padding: 3.5rem 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.04);
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #f0e8d8;
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 60px;
+            height: 2px;
+            background: #d4af37;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .card {
+            background: rgba(255,255,255,0.01);
+            padding: 1.8rem;
+            border-radius: 1.2rem;
+            border: 1px solid rgba(255,255,255,0.02);
+            transition: 0.3s;
+        }
+        .card:hover { border-color: rgba(212, 175, 55, 0.08); }
+        .card h3 { font-size: 1.2rem; color: #f0e8d8; margin-bottom: 0.3rem; }
+        .card p { color: #8a9a8a; }
+
+        .team {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        .team .member {
+            flex: 1 1 200px;
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.01);
+            border-radius: 1.2rem;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+        .team .member .avatar {
+            font-size: 3rem;
+            margin-bottom: 0.3rem;
+        }
+        .team .member h4 { color: #f0e8d8; font-weight: 600; }
+        .team .member p { color: #8a9a8a; font-size: 0.85rem; }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #4a5a4a;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 2.8rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .nav a { margin-left: 1rem; font-size: 0.75rem; }
+            .header { flex-wrap: wrap; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">NOVA<span>.</span></div>
+            <nav class="nav">
+                <a href="#">О нас</a>
+                <a href="#">Услуги</a>
+                <a href="#">Команда</a>
+                <a href="#">Контакты</a>
+            </nav>
+        </header>
+
+        <!-- Герой -->
+        <section class="hero">
+            <div class="badge"><i class="fas fa-crown"></i> Премиум-студия</div>
+            <h1>Создаём <span class="accent">искусство</span></h1>
+            <p class="sub">Дизайн, стратегия и технологии для брендов нового поколения.</p>
+            <div class="btn-group">
+                <a href="#" class="btn-primary">Обсудить проект</a>
+                <a href="#" class="btn-secondary">Портфолио</a>
+            </div>
+        </section>
+
+        <!-- О нас -->
+        <section>
+            <h2 class="section-title">О нас</h2>
+            <p style="max-width: 650px; color: #8a9a8a; margin-bottom: 1.5rem;">
+                Мы — команда дизайнеров, разработчиков и стратегов. Помогаем брендам расти через эстетику и функциональность.
+            </p>
+            <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                <span style="color: #d4af37; font-weight: 600;"><i class="fas fa-check-circle"></i> 5 лет опыта</span>
+                <span style="color: #d4af37; font-weight: 600;"><i class="fas fa-check-circle"></i> 40+ реализованных проектов</span>
+                <span style="color: #d4af37; font-weight: 600;"><i class="fas fa-check-circle"></i> Премиум-клиенты</span>
+            </div>
+        </section>
+
+        <!-- Услуги -->
+        <section>
+            <h2 class="section-title">Услуги</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Брендинг и айдентика</h3>
+                    <p>Разработка фирменного стиля, логотипов, упаковки и всей визуальной экосистемы.</p>
+                </div>
+                <div class="card">
+                    <h3>Веб-дизайн и разработка</h3>
+                    <p>Сайты, лендинги, интернет-магазины с уникальным дизайном и адаптивной вёрсткой.</p>
+                </div>
+                <div class="card">
+                    <h3>Маркетинговая стратегия</h3>
+                    <p>Разработка стратегий продвижения, контент-планов и аналитика рынка.</p>
+                </div>
+                <div class="card">
+                    <h3>Консалтинг</h3>
+                    <p>Экспертные консультации по развитию продукта, дизайну и пользовательскому опыту.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Команда -->
+        <section>
+            <h2 class="section-title">Команда</h2>
+            <div class="team">
+                <div class="member">
+                    <div class="avatar">👩‍🎨</div>
+                    <h4>Анна</h4>
+                    <p>Креативный директор</p>
+                </div>
+                <div class="member">
+                    <div class="avatar">👨‍💻</div>
+                    <h4>Максим</h4>
+                    <p>Технический директор</p>
+                </div>
+                <div class="member">
+                    <div class="avatar">👩‍💼</div>
+                    <h4>Елена</h4>
+                    <p>Стратег-маркетолог</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Контакты -->
+        <section style="border-bottom: none;">
+            <h2 class="section-title">Контакты</h2>
+            <p style="color: #8a9a8a; margin-bottom: 1.5rem;">Свяжитесь с нами для консультации.</p>
+            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                <a href="#" class="btn-primary"><i class="fab fa-telegram"></i> Telegram</a>
+                <a href="#" class="btn-primary" style="background: #7c6bff;"><i class="fas fa-rocket"></i> MAX</a>
+                <a href="#" class="btn-primary" style="background: #4d96ff;"><i class="fab fa-vk"></i> VK</a>
+            </div>
+        </section>
+
+        <footer class="footer">© 2026 NOVA — студия дизайна и стратегии</footer>
+    </div>
+</body>
+</html>

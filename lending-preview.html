@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASTRA — космический лендинг</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a1a;
+            color: #e0e8f0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        /* Шапка */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            position: sticky;
+            top: 0;
+            background: rgba(10,10,26,0.8);
+            backdrop-filter: blur(12px);
+            z-index: 10;
+        }
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #fff;
+        }
+        .logo span { color: #00e5ff; text-shadow: 0 0 30px rgba(0,229,255,0.2); }
+        .nav a {
+            color: #8a9bb5;
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .nav a:hover { color: #00e5ff; }
+
+        /* Герой */
+        .hero {
+            padding: 5rem 0 4rem;
+            text-align: center;
+            position: relative;
+        }
+        .hero .badge {
+            display: inline-block;
+            padding: 0.3rem 1.6rem;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: rgba(0,229,255,0.06);
+            border: 1px solid rgba(0,229,255,0.1);
+            color: #00e5ff;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.05;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        .hero h1 .accent {
+            background: linear-gradient(135deg, #00e5ff, #7c6bff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 40px rgba(0,229,255,0.15));
+        }
+        .hero .sub {
+            font-size: 1.2rem;
+            color: #8a9bb5;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+        }
+        .hero .desc {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-size: 1rem;
+            color: #8a9bb5;
+            line-height: 1.8;
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            padding: 0.9rem 3rem;
+            border-radius: 60px;
+            background: linear-gradient(135deg, #00e5ff, #0077ff);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 0 40px rgba(0,229,255,0.15);
+            transition: 0.3s;
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 60px rgba(0,229,255,0.25); }
+        .btn-secondary {
+            padding: 0.9rem 3rem;
+            border-radius: 60px;
+            border: 1px solid rgba(255,255,255,0.06);
+            color: #8a9bb5;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-secondary:hover { border-color: #00e5ff; color: #fff; }
+
+        /* Секции */
+        section {
+            padding: 4rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #fff;
+        }
+        .section-title i { color: #00e5ff; margin-right: 0.5rem; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .card {
+            background: rgba(255,255,255,0.02);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: 0.3s;
+        }
+        .card:hover { border-color: rgba(0,229,255,0.1); transform: translateY(-4px); }
+        .card h3 { font-size: 1.3rem; color: #fff; margin-bottom: 0.5rem; }
+        .card p { color: #8a9bb5; }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .features .item {
+            flex: 1 1 200px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #e0e8f0;
+            font-weight: 500;
+        }
+        .features .item i { color: #00e5ff; font-size: 1.2rem; }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #4a5a6a;
+            font-size: 0.85rem;
+        }
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 2.8rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .nav a { margin-left: 1rem; font-size: 0.75rem; }
+            .header { flex-wrap: wrap; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">ASTRA<span>.</span></div>
+            <nav class="nav">
+                <a href="#">О нас</a>
+                <a href="#">Услуги</a>
+                <a href="#">Портфолио</a>
+                <a href="#">Контакты</a>
+            </nav>
+        </header>
+
+        <!-- Герой -->
+        <section class="hero">
+            <div class="badge"><i class="fas fa-rocket"></i> Цифровая экосистема</div>
+            <h1>Космические <span class="accent">решения</span></h1>
+            <p class="sub">Инновации · Технологии · Будущее</p>
+            <p class="desc">Мы создаём продукты, которые меняют реальность. От идеи до воплощения — ваш путь в будущее.</p>
+            <div class="btn-group">
+                <a href="#" class="btn-primary"><i class="fas fa-rocket"></i> Начать</a>
+                <a href="#" class="btn-secondary"><i class="fas fa-play"></i> Смотреть</a>
+            </div>
+        </section>
+
+        <!-- О нас -->
+        <section>
+            <h2 class="section-title"><i class="fas fa-users"></i> О нас</h2>
+            <p style="max-width: 700px; color: #8a9bb5; font-size: 1.1rem; margin-bottom: 2rem;">
+                Мы — команда инженеров и дизайнеров, создающих цифровые продукты с 2020 года. Наша миссия — делать технологии доступными и эстетичными.
+            </p>
+            <div class="features">
+                <span class="item"><i class="fas fa-check-circle"></i> 4 года опыта</span>
+                <span class="item"><i class="fas fa-check-circle"></i> 20+ проектов</span>
+                <span class="item"><i class="fas fa-check-circle"></i> 100% довольных клиентов</span>
+            </div>
+        </section>
+
+        <!-- Услуги -->
+        <section>
+            <h2 class="section-title"><i class="fas fa-code"></i> Услуги</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3><i class="fas fa-globe" style="color:#00e5ff;"></i> Веб-разработка</h3>
+                    <p>Сайты, лендинги, интернет-магазины под ключ. Современные технологии и адаптивный дизайн.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-palette" style="color:#00e5ff;"></i> UI/UX дизайн</h3>
+                    <p>Прототипирование, дизайн-системы, пользовательские интерфейсы для любых платформ.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-database" style="color:#00e5ff;"></i> Backend-разработка</h3>
+                    <p>Серверная логика, API, базы данных, облачные решения и DevOps.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-chart-line" style="color:#00e5ff;"></i> Аналитика и рост</h3>
+                    <p>Настройка аналитики, SEO-оптимизация, консультации по развитию продукта.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Отзывы -->
+        <section>
+            <h2 class="section-title"><i class="fas fa-star"></i> Отзывы</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <p style="font-style: italic; color: #b0c8e0;">«Команда ASTRA создала для нас сайт, который привлёк в 2 раза больше клиентов. Рекомендую!»</p>
+                    <p style="margin-top: 0.5rem; color: #e0e8f0;">— Алексей, CEO</p>
+                </div>
+                <div class="card">
+                    <p style="font-style: italic; color: #b0c8e0;">«Профессиональный подход, быстрая реализация и отличный дизайн. Спасибо!»</p>
+                    <p style="margin-top: 0.5rem; color: #e0e8f0;">— Екатерина, маркетолог</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Контакты -->
+        <section style="border-bottom: none;">
+            <h2 class="section-title"><i class="fas fa-envelope"></i> Контакты</h2>
+            <p style="color: #8a9bb5; margin-bottom: 1.5rem;">Свяжитесь с нами любым удобным способом.</p>
+            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                <a href="#" class="btn-primary" style="background: linear-gradient(135deg, #00e5ff, #0077ff);"><i class="fab fa-telegram"></i> Telegram</a>
+                <a href="#" class="btn-primary" style="background: linear-gradient(135deg, #7c6bff, #4d96ff);"><i class="fas fa-rocket"></i> MAX</a>
+                <a href="#" class="btn-primary" style="background: linear-gradient(135deg, #4d96ff, #3d5afe);"><i class="fab fa-vk"></i> VK</a>
+            </div>
+        </section>
+
+        <footer class="footer">© 2026 ASTRA — космический лендинг</footer>
+    </div>
+</body>
+</html>
